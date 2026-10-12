@@ -1,8 +1,10 @@
 {
-    "categoria_processada": "0",
+    "categorias_processadas": [
+        "0"
+    ],
     "linhas_totais": 12158183,
-    "colunas_totais": 27,
-    "tempo_carregamento_segundos": 14.7153,
-    "tempo_calculo_segundos": 4.9333,
-    "tempo_total_t1_segundos": 19.6515
+    "colunas_sensores": 27,
+    "tempo_carregamento_s": 9.4893,
+    "tempo_calculo_s": 4.8368,
+    "tempo_total_t1_s": 14.3292
 }

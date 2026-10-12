@@ -6,37 +6,45 @@ import json
 import pandas as pd
 import numpy as np
 
-def carregar_dados_3w(diretorio_dataset, categoria="0"):
+def carregar_dados_3w(diretorio_dataset, categorias=["0"]):
     """
-    Lê os arquivos Parquet preservando a estrutura de séries temporais.
+    Lê os arquivos Parquet de uma ou mais categorias especificadas (ex: ['0', '3', '5'] ou ['todas']).
+    Preserva a ordem cronológica e filtra apenas as colunas de sensores.
     """
-    if categoria.lower() == "todas":
+    arquivos = []
+    categorias_str = [str(c).lower() for c in categorias]
+    
+    if "todas" in categorias_str:
         padrao_busca = os.path.join(diretorio_dataset, "*", "*.parquet")
+        arquivos = sorted(glob.glob(padrao_busca))
     else:
-        padrao_busca = os.path.join(diretorio_dataset, categoria, "*.parquet")
-        
-    arquivos = sorted(glob.glob(padrao_busca))
+        for cat in categorias:
+            padrao = os.path.join(diretorio_dataset, str(cat), "*.parquet")
+            encontrados = glob.glob(padrao)
+            arquivos.extend(encontrados)
+        arquivos = sorted(arquivos)
     
     if not arquivos:
-        raise FileNotFoundError(f"Nenhum arquivo Parquet encontrado em: {padrao_busca}")
+        raise FileNotFoundError(f"Nenhum arquivo Parquet encontrado para as categorias: {categorias}")
     
-    print(f"Total de arquivos identificados: {len(arquivos)}")
+    print(f"Total de arquivos Parquet localizados para as categorias {categorias}: {len(arquivos)}")
     
     lista_dfs = []
     for f in arquivos:
         df = pd.read_parquet(f)
         lista_dfs.append(df)
     
-    # Concatena preservando a ordem cronológica dos arquivos
+    # Concatena mantendo a integridade cronológica dos arquivos
     df_completo = pd.concat(lista_dfs, ignore_index=True)
     
-    # Ordenação temporal (caso exista coluna de timestamp explícita)
+    # Ordenação temporal caso exista coluna explícita
     colunas_tempo = [col for col in df_completo.columns if 'time' in col.lower() or 'data' in col.lower()]
     if colunas_tempo:
         col_tempo = colunas_tempo[0]
-        print(f"Ordenando dataset pela coluna temporal: '{col_tempo}'...")
+        print(f"Ordenando cronologicamente pela coluna: '{col_tempo}'...")
         df_completo = df_completo.sort_values(by=col_tempo).reset_index(drop=True)
     
+    # Seleciona apenas colunas de sensores numéricos (descarte de colunas administrativas/metadados)
     colunas_numericas = df_completo.select_dtypes(include=[np.number]).columns.tolist()
     colunas_sensores = [col for col in colunas_numericas if col.lower() not in ['class', 'state']]
     
@@ -44,7 +52,7 @@ def carregar_dados_3w(diretorio_dataset, categoria="0"):
 
 def calcular_estatisticas_referencia(df):
     """
-    Calcula N (amostras temporais válidas), média, mínimo, máximo e desvio padrão.
+    Calcula N (amostras temporais válidas), Média, Mínimo, Máximo e Desvio Padrão amostral (ddof=1).
     """
     estatisticas = {}
     
@@ -69,12 +77,11 @@ def calcular_estatisticas_referencia(df):
                 'desvio_padrao': np.nan
             }
             
-    df_res = pd.DataFrame.from_dict(estatisticas, orient='index')
-    return df_res
+    return pd.DataFrame.from_dict(estatisticas, orient='index')
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Processamento de Referência Sequencial - Dataset 3W")
-    parser.add_argument("--categoria", type=str, default="0", help="Categoria do 3W (ex: '0' ou 'todas')")
+    parser = argparse.ArgumentParser(description="Gabarito Sequencial de Referência - Dataset 3W")
+    parser.add_argument("--categorias", nargs="+", default=["0"], help="Categorias a processar (ex: --categorias 0 3 5 ou --categorias todas)")
     args = parser.parse_args()
 
     candidatos_caminho = [
@@ -90,15 +97,16 @@ if __name__ == "__main__":
             break
 
     if not caminho_dataset:
-        raise FileNotFoundError("Pasta '3W/dataset' não encontrada nos caminhos padrão.")
+        raise FileNotFoundError("Diretório '3W/dataset' não foi encontrado nos caminhos padrão.")
 
-    print(f"Lendo categoria [{args.categoria}] de: {os.path.abspath(caminho_dataset)}...")
+    print(f"\n=== Iniciando Processamento de Referência Sequencial ===")
+    print(f"Categorias selecionadas: {args.categorias}")
     inicio = time.time()
     
-    df_dados = carregar_dados_3w(caminho_dataset, categoria=args.categoria)
-    
+    df_dados = carregar_dados_3w(caminho_dataset, categorias=args.categorias)
     tempo_carregamento = time.time() - inicio
-    print(f"Matriz carregada! Dimensões: {df_dados.shape[0]} instantes temporais x {df_dados.shape[1]} sensores.")
+    
+    print(f"Matriz Carregada: {df_dados.shape[0]:,} linhas x {df_dados.shape[1]} colunas de sensores.")
     
     inicio_calculo = time.time()
     df_gabarito = calcular_estatisticas_referencia(df_dados)
@@ -106,23 +114,26 @@ if __name__ == "__main__":
     
     tempo_total = time.time() - inicio
     
+    # Exportação do Gabarito CSV e Metadados JSON
     os.makedirs("results", exist_ok=True)
     caminho_csv = os.path.join("results", "gabarito_referencia.csv")
     df_gabarito.to_csv(caminho_csv)
     
     meta_info = {
-        "categoria_processada": args.categoria,
+        "categorias_processadas": args.categorias,
         "linhas_totais": int(df_dados.shape[0]),
-        "colunas_totais": int(df_dados.shape[1]),
-        "tempo_carregamento_segundos": round(tempo_carregamento, 4),
-        "tempo_calculo_segundos": round(tempo_calculo, 4),
-        "tempo_total_t1_segundos": round(tempo_total, 4)
+        "colunas_sensores": int(df_dados.shape[1]),
+        "tempo_carregamento_s": round(tempo_carregamento, 4),
+        "tempo_calculo_s": round(tempo_calculo, 4),
+        "tempo_total_t1_s": round(tempo_total, 4)
     }
     
-    with open(os.path.join("results", "meta_referencia.json"), "w", encoding="utf-8") as f:
+    caminho_json = os.path.join("results", "meta_referencia.json")
+    with open(caminho_json, "w", encoding="utf-8") as f:
         json.dump(meta_info, f, indent=4)
 
-    print(f"\n--- Resultados de Referência (Sequencial) ---")
-    print(f"Tempo total de execução (T1): {tempo_total:.4f} segundos")
-    print(df_gabarito)
-    print(f"\nGabarito salvo em '{caminho_csv}' e metadados em 'results/meta_referencia.json'.")
+    print(f"\n--- Resumo das Estatísticas Calculadas ---")
+    print(df_gabarito.head(10))
+    print(f"\nGabarito salvo em: '{caminho_csv}'")
+    print(f"Metadados de execução salvos em: '{caminho_json}'")
+    print(f"⏱Tempo Sequencial Total (T1): {tempo_total:.4f} segundos")
