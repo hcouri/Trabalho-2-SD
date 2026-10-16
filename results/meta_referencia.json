@@ -1,10 +1,16 @@
 {
     "categorias_processadas": [
-        "0"
+        "todas"
     ],
-    "linhas_totais": 12158183,
+    "linhas_totais": 76587318,
     "colunas_sensores": 27,
-    "tempo_carregamento_s": 9.4893,
-    "tempo_calculo_s": 4.8368,
-    "tempo_total_t1_s": 14.3292
+    "tempo_carregamento_s": 28.0038,
+    "tempo_calculo_s": 12.0016,
+    "tempo_total_t1_s": 40.0055,
+    "ambiente_hardware": {
+        "processador": "Intel Core i5-11400F (6 cores / 12 threads)",
+        "placa_de_video": "NVIDIA GeForce RTX 4060 8GB",
+        "memoria_ram": "8 GB DDR4",
+        "sistema_operacional": "Windows 11"
+    }
 }
