@@ -4,8 +4,8 @@
 Comparar o desempenho de duas implementações distribuídas — uma utilizando MPI com Python (`mpi4py`) e outra utilizando Apache Spark (`PySpark`) — no processamento de estatísticas descritivas sobre grandes volumes de dados de sensores.
 
 ## Integrantes e Divisão de Tarefas
-- **Pessoa 1 (Edgar Lutterbach):** Aplicação e cálculos de referência, gabarito estatístico e streaming em lotes.
-- **Pessoa 2 (Henrique Couri):** Implementação paralela com MPI (`mpi4py`) usando primitivas coletivas (`Scatterv`, `Bcast`, `Allreduce`, `Reduce`).
+- **Pessoa 1 (Henrique Couri):** Aplicação e cálculos de referência, gabarito estatístico e streaming em lotes.
+- **Pessoa 2 (Edgar Lutterbach):** Implementação paralela com MPI (`mpi4py`) usando primitivas coletivas (`Scatterv`, `Bcast`, `Allreduce`, `Reduce`).
 - **Pessoa 3 (Vitto Baroni):** Implementação distribuída com Apache Spark (`PySpark`) e correção de esquema Parquet.
 - **Pessoa 4 (Gabriel Ramalho):** Bateria de experimentos, escalabilidade ($p=1 \dots 128$), avaliação das 3 alterações arquiteturais, gráficos acadêmicos e relatório técnico.
 
