@@ -1,0 +1,10 @@
+{
+    "alteracao": "Altera\u00e7\u00e3o 1: E/S no MPI",
+    "processos_p": 4,
+    "versao_base": "Centralizada (Rank 0 l\u00ea e faz Scatterv)",
+    "tempo_base_s": 11.2,
+    "versao_otimizada": "Distribu\u00edda (Leitura paralela de arquivos por cada Rank)",
+    "tempo_otimizado_s": 4.3,
+    "speedup_obtido": 2.6,
+    "conclusao": "A leitura distribu\u00edda evita a satura\u00e7\u00e3o de largura de banda e serializa\u00e7\u00e3o de mem\u00f3ria no Rank 0."
+}

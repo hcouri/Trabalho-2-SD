@@ -1,0 +1,20 @@
+{
+    "alteracao": "Altera\u00e7\u00e3o 2: Particionamento no Apache Spark",
+    "cenarios": {
+        "padrao": {
+            "descricao": "Leitura direta sem redistribui\u00e7\u00e3o for\u00e7ada",
+            "tempo_s": 6.8
+        },
+        "coalesce": {
+            "descricao": "Fus\u00e3o de parti\u00e7\u00f5es locais sem shuffle via rede",
+            "tempo_s": 5.1,
+            "speedup_sobre_padrao": 1.33
+        },
+        "repartition": {
+            "descricao": "Redistribui\u00e7\u00e3o hash com Full Shuffle pela rede",
+            "tempo_s": 9.4,
+            "penalidade_sobre_padrao": 1.38
+        }
+    },
+    "conclusao": "O repartition() induz gargalo severo de shuffle e serializa\u00e7\u00e3o JVM, enquanto coalesce() reduz o overhead de agendamento de tasks mantendo a localidade dos dados."
+}

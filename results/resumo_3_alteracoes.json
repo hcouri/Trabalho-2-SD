@@ -1,0 +1,24 @@
+{
+    "alteracao_1_es_mpi": {
+        "alteracao": "1. E/S no MPI",
+        "centralizada_s": 11.2,
+        "distribuida_s": 4.3,
+        "speedup": 2.6,
+        "impacto": "A leitura paralela direta elimina o gargalo de I/O e serialização no Rank 0."
+    },
+    "alteracao_2_spark_particionamento": {
+        "alteracao": "2. Particionamento Spark",
+        "padrao_s": 6.8,
+        "coalesce_s": 5.1,
+        "repartition_s": 9.4,
+        "speedup_coalesce": 1.33,
+        "impacto": "coalesce() evita shuffle desnecessário pela rede, enquanto repartition() provoca full shuffle."
+    },
+    "alteracao_3_vetorizacao": {
+        "alteracao": "3. Vetorização em Memória",
+        "python_loops_s": 18.7,
+        "numpy_simd_s": 0.42,
+        "speedup_vetorizacao": 44.52,
+        "impacto": "Instruções SIMD contíguas em C superam laços iterativos dinâmicos em Python por >40x."
+    }
+}

@@ -1,0 +1,31 @@
+# Ambientes Virtuais Python
+.venv/
+venv/
+ENV/
+env/
+
+# Bytecodes e Caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.cpython-*.pyc
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Datasets volumosos do 3W (não devem ir para o repositório Git)
+3W/
+*.parquet
+
+# Guia pessoal (uso interno, não versionar)
+GUIA_PESSOA4.md
+
+# Logs e arquivos de sistema do SO
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
