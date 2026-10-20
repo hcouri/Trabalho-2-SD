@@ -1,0 +1,10 @@
+{
+    "alteracao": "Altera\u00e7\u00e3o 3: Vetoriza\u00e7\u00e3o em Mem\u00f3ria",
+    "n_linhas": 500000,
+    "n_colunas": 27,
+    "versao_base": "Python Nativo (somas_python)",
+    "tempo_base_s": 4.3161,
+    "versao_otimizada": "NumPy Vetorizado (somas_numpy)",
+    "tempo_otimizado_s": 0.1601,
+    "speedup_obtido": 26.96
+}
