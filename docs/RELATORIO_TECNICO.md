@@ -3,8 +3,8 @@
 **Autores:** Edgar Lutterbach, Gabriel Ramalho, Henrique Couri, Vitto Baroni  
 **Disciplina:** Sistemas Distribuídos — Universidade Federal Fluminense (UFF)  
 **Divisão de Responsabilidades:**
-- **Pessoa 1 (Edgar Lutterbach):** Aplicação sequencial de referência, gabarito estatístico e perfilamento.
-- **Pessoa 2 (Henrique Couri):** Implementação MPI paralela com `mpi4py` (Scatterv, Bcast, Allreduce, Reduce).
+- **Pessoa 1 (Henrique Couri):** Aplicação sequencial de referência, gabarito estatístico e perfilamento.
+- **Pessoa 2 (Edgar Lutterbach):** Implementação MPI paralela com `mpi4py` (Scatterv, Bcast, Allreduce, Reduce).
 - **Pessoa 3 (Vitto Baroni):** Implementação Apache Spark distribuída com `PySpark` e DataFrames.
 - **Pessoa 4 (Gabriel Ramalho):** Baterias de experimentos, benchmarks de escalabilidade ($p=1 \dots 128$), avaliação das 3 alterações arquiteturais, gráficos acadêmicos e redação do relatório técnico.
 
